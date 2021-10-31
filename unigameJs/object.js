@@ -99,7 +99,7 @@ const DComponents = {//all defualt components
       const pos = object.components.body.pos.add(this.offset);
       game.ctx.fillText(this.text,pos.x,pos.y);
     }
-  }
+  },
 
   //script (use for script)
   "script": function(script){

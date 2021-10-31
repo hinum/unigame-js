@@ -49,9 +49,11 @@ function Scene(init){
 
   //run stuff on all objects
   this.runonall= (func)=>{
-    this.objects.forEach((thing)=>{
-      if (thing.update) return func.bind(thing)();
-      return thing.forEach((thing1)=>func.bind(thing1)());
-    })
+    "use strict";
+    const running = function(){
+      if (this.id) return func.bind(this)();
+      this.forEach(function(thing,i){running.bind(this[i])()}.bind(this));
+    }
+    running.bind(this.objects)();
   }
 }
