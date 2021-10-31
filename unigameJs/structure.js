@@ -13,6 +13,13 @@ function Game(defaultScene,canvasDisplay){
   this.scene = defaultScene;
   this.sounds = {};
 
+  //events
+  onkeydown = (e)=>this.scene.runonall(this.components.script?.script?.onkeydown ?? function (){})(e.key);
+  onkeydown = (e)=>this.scene.runonall(this.components.script?.script?.onkeydown ?? function (){})(e.key);
+  onkeydown = (e)=>this.scene.runonall(this.components.script?.script?.onkeydown ?? function (){})(
+    new Vec2 (e.clientX,e.clientY).divide(this.gu).add(this.scene.camera)
+  );
+  
   //update
   this.update = ()=>{
     //change the dt value
