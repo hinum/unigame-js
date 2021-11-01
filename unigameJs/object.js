@@ -12,7 +12,7 @@ function Object(components,name){
   }
 
   this.runEvent = (event)=>{
-    return this.components.scrpit?.script[event] ?? ()=>{};
+    return this.components.scrpit?.script[event] ?? function(){};
   }
 }
 
@@ -153,7 +153,7 @@ const DComponents = {//all defualt components
       return ((masses[0]-masses[1])/stuff)*speed[0]+((masses[1]*2)/stuff)*speed[1];
     }
     //do the work
-    this.script = function(object,thing){
+    const script = function(object,thing){
       if (!thing().components.colider) return object;
 
       const thingMass = thing().components.collider?.mass ?? thing().components.body.mass;
@@ -174,7 +174,7 @@ const DComponents = {//all defualt components
       this.trigger.size = object.components.body.area;
       object.components.body = this.trigger.update({
         "components":{"body": object.components.body},
-        "id": object.id,"getEvent":()=>{return this.script}.bind(this)
+        "id": object.id,"getEvent":()=>script
       })
 
       return object;
