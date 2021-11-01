@@ -14,11 +14,10 @@ function Game(defaultScene,canvasDisplay){
   this.sounds = {};
 
   //events
-  onkeydown = (e)=>this.scene.runonall(this.components.script?.script?.onkeydown ?? function (){})(e.key);
-  onkeydown = (e)=>this.scene.runonall(this.components.script?.script?.onkeydown ?? function (){})(e.key);
-  onkeydown = (e)=>this.scene.runonall(this.components.script?.script?.onkeydown ?? function (){})(
-    new Vec2 (e.clientX,e.clientY).divide(this.gu).add(this.scene.camera)
-  );
+  onkeydown = (e)=>this.scene.runonall(()=>this.components = this.getEvent("onkeydown")(this,e.key).components);
+  onkeyup = (e)=>this.scene.runonall(()=>this.components = this.getEvent("onkeyup")(this,e.key).components);
+  onclick = (e)=>this.scene.runonall(()=>this.components = this.getEvent("onclick")(this,
+    new Vec2 (e.clientX,e.clientY).divide(this.gu).add(this.scene.camera)).components);
   
   //update
   this.update = ()=>{
@@ -33,10 +32,10 @@ function Game(defaultScene,canvasDisplay){
 
   //change scene
   this.switchScene = (scene)=>{
-    this.scene.runonall(function(){(this.components.script?.onOff ?? function (){})();});
+    this.scene.runonall(()=>this.components = this.getEvent("onOff")(this). components);
     let offScene = this.scene;
     this.scene = scene;
-    this.scene.runonall(function(){(this.components.script?.onOn ?? function (){})();});
+    this.scene.runonall(()=>this.components = this.getEvent("onOn")(this). components );
     
     return offScene;
   }

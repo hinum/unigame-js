@@ -10,6 +10,10 @@ function Object(components,name){
       this.components = this.components[key].update(this)?.components ?? this.components;
     }
   }
+
+  this.runEvent = (event)=>{
+    return this.components.scrpit?.script[event] ?? ()=>{};
+  }
 }
 
 const DComponents = {//all defualt components
@@ -130,7 +134,7 @@ const DComponents = {//all defualt components
         //find overlap
         if (findOverlap([pos.clone().minus(size),pos.clone().add(size)],
             [thisBody.pos.clone().minus(thisBody.area),thisBody.pos.clone().add(thisBody.area)]) && object.id != this.id)
-            object = doTheThing(function(){return this}.bind(this)) ?? object;
+            object = object.getEvent("onEnterTrigger")(object,this);
       });
       return object;
     }
@@ -149,7 +153,7 @@ const DComponents = {//all defualt components
       return ((masses[0]-masses[1])/stuff)*speed[0]+((masses[1]*2)/stuff)*speed[1];
     }
     //do the work
-    this.script = {"script":{"onEnterTrigger": function(object,thing){
+    this.script = function(object,thing){
       if (!thing().components.colider) return object;
 
       const thingMass = thing().components.collider?.mass ?? thing().components.body.mass;
@@ -163,14 +167,15 @@ const DComponents = {//all defualt components
       object.components.body.onGround = true;
       
       return object
-    }.bind(this)}};
+    }.bind(this);
     
     this.update = (object)=>{
       //update trigger
       this.trigger.size = object.components.body.area;
-      object.components.body = this.trigger.update({"components":{
-        "script":this.script,"body": object.components.body
-      },"id": object.id}).components.body;
+      object.components.body = this.trigger.update({
+        "components":{"body": object.components.body},
+        "id": object.id,"getEvent":()=>{return this.script}.bind(this)
+      })
 
       return object;
     }
